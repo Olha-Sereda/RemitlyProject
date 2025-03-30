@@ -9,11 +9,11 @@ import { SwiftCodeModule } from './swift-code/swift-code.module';
   imports: [
     TypeOrmModule.forRoot({
       type: 'postgres',
-      host: process.env.DB_HOST || 'localhost',
+      host: process.env.DB_HOST || 'db',
       port: parseInt(process.env.DB_PORT || '5432', 10),
-      username: process.env.DB_USERNAME || 'lunar',
-      password: process.env.DB_PASSWORD || 'simform',
-      database: process.env.DB_NAME || 'pgwithnest',
+      username: process.env.DB_USERNAME || 'postgres',
+      password: process.env.DB_PASSWORD || 'yourpassword',
+      database: process.env.DB_NAME || 'swift_db',
       entities: [SwiftCode],
       synchronize: true,
       logging: true,
