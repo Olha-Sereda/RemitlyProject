@@ -1,12 +1,13 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateSwiftCodeDto } from './dto/create-swift-code.dto';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Like, Repository } from 'typeorm';
 import { SwiftCode } from './entities/swift-code.entity';
 import { SwiftCSVData } from './types/swift-csv-data.type';
 import * as fs from 'fs';
 import * as csv from 'csv-parser';
-import { Like } from 'typeorm';
+import { console } from 'inspector';
+
 @Injectable()
 export class SwiftCodeService {
   constructor(
