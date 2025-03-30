@@ -6,7 +6,7 @@ import * as path from 'path';
 async function bootstrap() {
   const app = await NestFactory.createApplicationContext(AppModule);
   const swiftCodeService = app.get(SwiftCodeService);
-  const filePath = path.resolve(__dirname, '../src/data/swift-code.csv');
+  const filePath = path.resolve(__dirname, '../src/data/swift-codes.csv');
   await swiftCodeService.parseAndInsertCSV(filePath);
   await app.close();
 }
