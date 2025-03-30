@@ -5,18 +5,31 @@ import { AppService } from './app.service';
 describe('AppController', () => {
   let appController: AppController;
 
+  const mockAppService = {
+    getHealthCheck: jest.fn().mockReturnValue({
+      status: 'ok',
+      timestamp: new Date().toISOString(),
+    }),
+  };
+
   beforeEach(async () => {
     const app: TestingModule = await Test.createTestingModule({
       controllers: [AppController],
       providers: [AppService],
-    }).compile();
+    })
+      .overrideProvider(AppService)
+      .useValue(mockAppService)
+      .compile();
 
     appController = app.get<AppController>(AppController);
   });
 
-  describe('root', () => {
-    it('should return "Hello World!"', () => {
-      expect(appController.getHello()).toBe('Hello World!');
+  describe('healthCheck', () => {
+    it('should return health-check status', () => {
+      expect(appController.healthCheck()).toEqual({
+        status: 'ok',
+        timestamp: expect.any(String) as string,
+      });
     });
   });
 });
