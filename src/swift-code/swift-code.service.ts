@@ -6,7 +6,7 @@ import { SwiftCode } from './entities/swift-code.entity';
 import { SwiftCSVData } from './types/swift-csv-data.type';
 import * as fs from 'fs';
 import * as csv from 'csv-parser';
-
+import { Like } from 'typeorm';
 @Injectable()
 export class SwiftCodeService {
   constructor(
@@ -108,20 +108,40 @@ export class SwiftCodeService {
   }
 
   async getSwiftCodeDetails(swiftCode: string) {
-    const swiftCodeData = await this.swiftCodeRepository
-      .createQueryBuilder('swiftCode')
-      .leftJoinAndSelect('swiftCode.branches', 'branch')
-      .where('swiftCode.swiftCode = :swiftCode', { swiftCode })
-      .andWhere('swiftCode.isHeadquarter = true') // Ensure this is a headquarter
-      .getOne();
+    const headquarter = await this.swiftCodeRepository.findOne({
+      where: {
+        swiftCode: swiftCode,
+        isHeadquarter: true,
+      },
+      select: [
+        'address',
+        'bankName',
+        'countryISO2',
+        'isHeadquarter',
+        'swiftCode',
+        'countryName',
+      ],
+    });
 
-    if (!swiftCodeData) {
+    if (!headquarter) {
       throw new NotFoundException('Swift code not found');
     }
 
-    // Return the headquarter along with the related branches
-    const { branches, ...hqData } = swiftCodeData;
-    return { ...hqData, branches };
+    const branchOffices = await this.swiftCodeRepository.find({
+      where: {
+        swiftCode: Like(`${swiftCode.slice(0, -3)}%`),
+        isHeadquarter: false,
+      },
+      select: [
+        'address',
+        'bankName',
+        'countryISO2',
+        'isHeadquarter',
+        'swiftCode',
+      ],
+    });
+
+    return { headquarter, branches: branchOffices };
   }
 
   async deleteSwiftCode(swiftCode: string) {
