@@ -99,6 +99,9 @@ DB_PORT=5432
 DB_USERNAME=postgres
 DB_PASSWORD=yourpassword
 DB_NAME=swift_db
+POSTGRES_USER=user
+POSTGRES_PASSWORD=yourpassword
+POSTGRES_DB=swift_db
 ```
 
 ---
